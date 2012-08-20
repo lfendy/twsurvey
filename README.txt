@@ -4,7 +4,7 @@ Locally:
 gem install bundler
 bundle install
 
-forman start
+foreman start
 -or-
 rackup
 
