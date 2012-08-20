@@ -292,7 +292,7 @@
 
                 <div class="ss-item ss-navigate">
                     <div class="ss-form-entry">
-                        <input type="submit" name="submit" value="Submit Feedback">
+                        <input id="submit-button" type="submit" name="submit" value="Submit Feedback">
                     </div>
                 </div>
             </form>
@@ -353,6 +353,8 @@
                     if (faults.length) {
                         return false;
                     } else {
+                        $('#submit-button').val("Please wait...")
+                        $('#submit-button').attr("disabled","disabled").addClass( 'ui-state-disabled' );
                         submitted = true;
                         return true;
                     }
