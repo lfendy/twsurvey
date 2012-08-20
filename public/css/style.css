@@ -345,7 +345,7 @@ td {
    ========================================================================== */
 
 .ss-form{
-    padding: 3% 5%;
+    padding: 2.5% 5% 3% 5%;
 }
 
 .ss-form-input {
@@ -376,7 +376,7 @@ select{
 }
 
 .ss-form-desc {
-	margin:3% 5%;
+	margin:3% 5% 0 5%;
 	color:#4f4f4f;
 }
 
@@ -397,7 +397,7 @@ select{
     background: #828693;
     background: -webkit-linear-gradient(#828693 0%, #455A69 100%);
     border-radius: 2px;
-    border: 1px solid #081A25; 
+    border: 1px solid #081A25;
     font-weight: bold;
     padding: 0.8em 0;
     color: #fff;
@@ -570,7 +570,7 @@ h2.ss-section-title {
 /* ==|== primary styles =====================================================
    Author:
    ========================================================================== */
-   
+
 body{
     font-size:1em;
     font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
@@ -612,7 +612,7 @@ body{
     	padding-bottom:0.8em;
     }
     .ss-choice-label .ss-q-radio{
-        margin-right: 0.4em; 
+        margin-right: 0.4em;
     }
     .ss-choice-label{
         padding: 0 0.8em;
@@ -624,6 +624,9 @@ body{
     .ss-choices li{
         border-top: none;
         padding: 0.4em 0;
+    }
+    .ss-choices .ss-q-other {
+        margin-left: 0.4em;
     }
     .ss-choice-label:focus, .ss-choice-label:hover{
         background: none;
@@ -643,6 +646,9 @@ body{
     }
     .ss-branding-strip{
         background-color: #F7931E;
+    }
+    .errorheader {
+      margin-bottom: 0.8em;
     }
 }
 
