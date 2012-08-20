@@ -626,7 +626,7 @@ body{
         padding: 0.4em 0;
     }
     .ss-choices .ss-q-other {
-        margin: 0.2em 0 0 0;
+        margin: 0 0 0 0;
     }
     .ss-choice-label:focus, .ss-choice-label:hover{
         background: none;
