@@ -43,4 +43,4 @@ if [ -z "$CONCURRENT" ]; then
   exit 1
 fi
 
-ab -n $NUMBER -c $CONCURRENT -v 2 -g results.gnu -e results.csv $TARGET_URL
+ab -n $NUMBER -c $CONCURRENT -v 1 -g results.gnu -e results.csv $TARGET_URL
