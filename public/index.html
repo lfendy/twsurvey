@@ -39,7 +39,7 @@
 
             <iframe id="hidden_iframe" style="display:none;" onload="if(submitted){window.location='thank-you.html';}"></iframe>
 
-            <form id="ss-form" action="https://docs.google.com/a/thoughtworks.com/spreadsheet/formResponse?formkey=dHpTckZwb0ZzSGNycVh0dkN4R0puRnc6MQ&amp;ifq" method="post" target="hidden_iframe" onsubmit="return validateForm(this);">
+            <form id="ss-form" action="https://docs.google.com/a/thoughtworks.com/spreadsheet/formResponse?formkey=dHpTckZwb0ZzSGNycVh0dkN4R0puRnc6MQ&amp;ifq" method="post" target="hidden_iframe" onsubmit="submitted=true;">
 
                 <div class="errorheader ss-required-asterisk" style="display:none;">
                     <b>Please fill in the required fields.</b>
@@ -321,46 +321,6 @@
                         }
                     }
                 })();
-
-                var validateForm = function(form) {
-                    $('.errorbox-bad').attr('class', 'errorbox-good');
-
-                    var faults = $('input').filter(function() {
-                        if ($(this).data('required')) {
-                            if ($(this).attr('type') === 'radio') {
-                                var radioButtonsInGroup = $('input[name="' + $(this).attr('name') + '"]');
-                                var checkedRadioButtons = $(radioButtonsInGroup).filter(function() {
-                                    return $(this).attr('checked') === true;
-                                });
-
-                                return $(checkedRadioButtons).length === 0;
-                            } else {
-                                return $(this).val() === "";
-                            }
-                        }
-                    });
-
-                    var firstFault = $(faults).get(0);
-                    $.each(faults, function(index, value) {
-                        $(value).closest('.errorbox-good').attr('class', 'errorbox-bad');
-                    });
-
-                    if ($(faults).length > 0) {
-                        $('.errorheader').show();
-                    } else {
-                        $('.errorheader').hide();
-                    }
-
-                    $(firstFault).focus();
-
-                    if (faults.length) {
-                        return false;
-                    } else {
-                        submitted = true;
-                        return true;
-                    }
-                }
-
             </script>
         </div>
     </div>
