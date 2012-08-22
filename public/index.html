@@ -300,12 +300,74 @@
                 </div>
             </form>
             <script type="text/javascript">
+                (function() {
+                    var divs = document.getElementById("ss-form").getElementsByTagName("div");
+
+                    var numDivs = divs.length;
+
+                    for (var j = 0; j < numDivs; j++) {
+                        if (divs[j].className == "errorbox-bad") {
+                            divs[j].lastChild.firstChild.lastChild.focus();
+                            return;
+                        }
+                    }
+
+                    for (var i = 0; i < numDivs; i++) {
+                        var div = divs[i];
+
+                        if (div.className == "ss-form-entry" && div.firstChild && div.firstChild.className == "ss-q-title") {
+                            div.lastChild.focus();
+                            return;
+                        }
+                    }
+                })();
+
                 var validateForm = function(form) {
-                    $('#submit-button').val("Please wait...")
-                    $('#submit-button').attr("disabled","disabled").addClass( 'ui-state-disabled' );
+                    // SG - looks like the form validation is what's causing the form not to work, disabling for now.
                     submitted = true;
                     return true;
+                    
+                    // SG - hmm... we need to check this, or remove it
+                    $('.errorbox-bad').attr('class', 'errorbox-good');
+
+                    var faults = $('input').filter(function() {
+                        if ($(this).data('required')) {
+                            if ($(this).attr('type') === 'radio') {
+                                var radioButtonsInGroup = $('input[name="' + $(this).attr('name') + '"]');
+                                var checkedRadioButtons = $(radioButtonsInGroup).filter(function() {
+                                    return $(this).attr('checked') === true;
+                                });
+
+                                return $(checkedRadioButtons).length === 0;
+                            } else {
+                                return $(this).val() === "";
+                            }
+                        }
+                    });
+
+                    var firstFault = $(faults).get(0);
+                    $.each(faults, function(index, value) {
+                        $(value).closest('.errorbox-good').attr('class', 'errorbox-bad');
+                    });
+
+                    if ($(faults).length > 0) {
+                        $('.errorheader').show();
+                    } else {
+                        $('.errorheader').hide();
+                    }
+
+                    $(firstFault).focus();
+
+                    if (faults.length) {
+                        return false;
+                    } else {
+                        $('#submit-button').val("Please wait...")
+                        $('#submit-button').attr("disabled","disabled").addClass( 'ui-state-disabled' );
+                        submitted = true;
+                        return true;
+                    }
                 }
+
             </script>
         </div>
     </div>
