@@ -323,11 +323,6 @@
                 })();
 
                 var validateForm = function(form) {
-                    // SG - looks like the form validation is what's causing the form not to work, disabling for now.
-                    submitted = true;
-                    return true;
-                    
-                    // SG - hmm... we need to check this, or remove it
                     $('.errorbox-bad').attr('class', 'errorbox-good');
 
                     var faults = $('input').filter(function() {
