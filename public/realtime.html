@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Thoughtworks</title>
+    <link href="layout.css" rel="stylesheet" type="text/css">
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="javascripts/jquery-1.8.0.min.js"></script>
+    <script language="javascript" type="text/javascript" src="javascripts/jquery.flot.js"></script>
+ </head>
+    <body>
+    <h1>Thoughtworks Mobile Atlanta</h1>
+
+    <p>Realtime updates on google form submission</p>
+
+<script type="text/javascript">
+$(function () {
+    // we use an inline data source in the example, usually data would
+    // be fetched from a server
+
+    var totalPoints = 300;
+    var defaultOptions = {
+        series: { shadowSize: 0 }, // drawing is faster without shadows
+        yaxis: { min: 0, max: 20 },
+        xaxis: { show: false }
+    };
+    window.plots = {};
+
+
+    var getOrCreateDiv = function(divId) {
+      if (!jQuery('#'+divId).size()) {
+        jQuery('body').append('<div style="width:600px;height:300px;" id="'+divId+'"></div>');
+      };
+      return jQuery('#'+divId);
+    };
+
+    var populateSpreadsheet = function(spreadsheet, loc, value){
+      row = loc.replace(/[A-Z](\d+).*/, "$1")-1;
+      col = loc.replace(/[A-Z]\d+[A-Z](\d+)/, "$1")-1;
+      if (spreadsheet[row] === undefined) {
+        spreadsheet[row] = [];
+      }
+      spreadsheet[row][col] = value;
+      return spreadsheet;
+    };
+
+    var displaySummary = function() {
+
+      for (var plotName in plots){
+        if (plots.hasOwnProperty(plotName)){
+          var div = getOrCreateDiv(plotName);
+          var thisPlot = plots[plotName];
+          var series=[];
+          for (var seriesName in thisPlot){
+            if(thisPlot.hasOwnProperty(seriesName)){
+              var data = thisPlot[seriesName]["data"] || [];
+              if (data.length > 0)
+                  data = data.slice(1);
+
+              while (data.length < totalPoints) {
+                data.push(thisPlot[seriesName]["current"]);
+              }
+
+              var res = [];
+              for (var i = 0; i < data.length; ++i)
+                  res.push([i, data[i]]);
+              series.push(res);
+              thisPlot[seriesName]["data"] = data;
+            }
+          }
+          plots[plotName]["plot"] = plots[plotName]["plot"] || $.plot($("#"+plotName), series, defaultOptions);
+          plots[plotName]["plot"].setData(series);
+          // since the axes don't change, we don't need to call plot.setupGrid()
+          plots[plotName]["plot"].draw();
+
+        }
+      }
+
+      setTimeout(displaySummary, 100);
+
+    };
+
+    var updateSummary = function(spreadsheet) {
+      for(var i = 0; i < spreadsheet.length; i++) {
+        var row = spreadsheet[i];
+        var plotName = row[0];
+        var seriesName = row[1];
+        var seriesNewValue = row[2];
+        var thisPlot = plots[plotName] || {};
+        thisPlot[seriesName] = thisPlot[seriesName] || {};
+        thisPlot[seriesName]["current"] = seriesNewValue;
+        plots[plotName] = thisPlot;
+      }
+    };
+
+    var processSummary = function(data) {
+      var entries = data.feed.entry;
+      var spreadsheet = [];
+      for (var i = 0; i < entries.length; i++){
+        var cell = entries[i];
+        var cellId = cell.id.$t;
+        var cellValue = cell.content.$t;
+        var cellIds = cellId.split('/');
+        cellId = cellIds[cellIds.length-1];
+        spreadsheet = populateSpreadsheet(spreadsheet, cellId, cellValue);
+      }
+      updateSummary(spreadsheet);
+    };
+
+    var getSummary = function() {
+      var url = "https://spreadsheets.google.com/feeds/cells/0AsvYjmgY0JMSdF85b2tMSFZOR0Z3cjhXVGdDMnA4bnc/od7/public/basic?alt=json";
+      jQuery.get(url, processSummary);
+
+      setTimeout(getSummary, 200);
+    };
+
+    getSummary();
+    displaySummary();
+});
+</script>
+
+ </body>
+</html>
